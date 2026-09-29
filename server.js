@@ -28,6 +28,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/annonces', annonceRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/transactions', transactionRoutes);
+app.use('/uploads', express.static('uploads'));
 
 const PORT = process.env.PORT || 3001;
 
