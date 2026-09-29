@@ -1,0 +1,41 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: pa_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: pa_user
+      MYSQL_PASSWORD: pa_password
+    ports:
+      - "3308:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  mongo:
+    image: mongo:6
+    container_name: pa_mongo
+    restart: always
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build: .
+    container_name: pa_backend
+    restart: always
+    ports:
+      - "3002:3001"
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+      - mongo
+    volumes:
+      - ./src:/app/src
+
+volumes:
+  db_data:
+  mongo_data:
