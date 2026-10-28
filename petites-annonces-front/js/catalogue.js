@@ -33,7 +33,7 @@ async function chargerAnnonces(categorie = '') {
           <h3 class="font-semibold text-sm text-gray-900 truncate">${item.titre}</h3>
           <p class="text-xs text-gray-500 mt-0.5">${item.prix ? item.prix + ' €' : 'Gratuit / Prêt'}</p>
           <span class="inline-flex items-center gap-1 mt-2 px-2 py-0.5 bg-emerald-50 text-emerald-700 text-xs font-medium rounded-full border border-emerald-200">
-            🌱 ${item.co2_economise || 0} kg CO₂ évités
+             ${item.co2_economise || 0} kg CO₂ évités
           </span>
         </div>
       </article>
