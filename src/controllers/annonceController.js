@@ -5,14 +5,18 @@ export const createAnnonce = async (req, res) => {
     const { titre, description, etat, prix, id_sous_categorie } = req.body;
     const Client_particulier_idClient = req.user.idClient; 
 
-    if (!titre || !description || !etat || !prix || !id_sous_categorie) {
+    if (!titre || !description || !etat || prix === undefined || prix === '' || !id_sous_categorie) {
       return res.status(400).json({ message: 'Tous les champs sont obligatoires' });
     }
+    if (isNaN(prix) || Number(prix) < 0) {
+      return res.status(400).json({ message: 'Prix invalide' });
+    }
+    const image = req.file ? req.file.filename : null;
 
     const [result] = await pool.execute(
-      `INSERT INTO Produit (titre, description, etat, prix, statut, Client_particulier_idClient, id_sous_categorie)
-       VALUES (?, ?, ?, ?, 'disponible', ?, ?)`,
-      [titre, description, etat, prix, Client_particulier_idClient, id_sous_categorie]
+      `INSERT INTO Produit (titre, description, etat, prix, statut, image, Client_particulier_idClient, id_sous_categorie)
+       VALUES (?, ?, ?, ?, 'disponible', ?, ?, ?)`,
+      [titre, description, etat, Number(prix), image, Client_particulier_idClient, id_sous_categorie]
     );
 
     res.status(201).json({
@@ -37,7 +41,7 @@ export const getAllAnnonces = async (req, res) => {
     res.status(200).json(rows);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Erreur lors de la récupération des annonces' });
+    res.status(500).json({ message: 'Erreur lors de la récupération des annonces'});
   }
 };
 
@@ -60,7 +64,7 @@ export const getAnnonceById = async (req, res) => {
     res.status(200).json(rows[0]);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Erreur lors de la récupération de l\'annonce' });
+    res.status(500).json({ message: 'Erreur lors de la récupération de l\'annonce'});
   }
 };
 
@@ -101,7 +105,7 @@ export const getHistoriqueUtilisateur = async (req, res) => {
     );
 
     const [achats] = await pool.execute(
-      `SELECT A.*, P.nom, P.description, P.photos 
+      `SELECT A.*, P.titre, P.description, P.image
        FROM Achat A 
        JOIN Produit P ON A.Produit_idProduit = P.idProduit 
        WHERE A.idClient = ?`,
@@ -109,7 +113,7 @@ export const getHistoriqueUtilisateur = async (req, res) => {
     );
 
     const [locations] = await pool.execute(
-      `SELECT L.*, P.nom, P.description, P.photos 
+      `SELECT L.*, P.titre, P.description, P.image 
        FROM Location L 
        JOIN Produit P ON L.Produit_idProduit = P.idProduit 
        WHERE L.idClient = ?`,
@@ -123,6 +127,6 @@ export const getHistoriqueUtilisateur = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Erreur lors de la récupération de l\'historique' });
+        res.status(500).json({ message: 'Erreur lors de la récupération des annonces' });
   }
 };

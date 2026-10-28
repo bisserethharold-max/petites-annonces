@@ -14,21 +14,20 @@ dotenv.config();
 
 connectMongo();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(dirname, 'uploads')));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/annonces', annonceRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/transactions', transactionRoutes);
-app.use('/uploads', express.static('uploads'));
 
 const PORT = process.env.PORT || 3001;
 
