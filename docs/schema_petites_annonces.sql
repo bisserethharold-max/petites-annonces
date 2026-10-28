@@ -21,10 +21,11 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Client_particulier` (
   `idClient` INT NOT NULL AUTO_INCREMENT,
   `nom` VARCHAR(45) NOT NULL,
   `code_postal` VARCHAR(45) NOT NULL,
-  `email` VARCHAR(45) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
   `role` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`idClient`))
+   PRIMARY KEY (`idClient`),
+  UNIQUE INDEX `uq_client_email` (`email` ASC))
 ENGINE = InnoDB;
 
 
@@ -61,11 +62,12 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Produit` (
   `idProduit` INT NOT NULL AUTO_INCREMENT,
-  `titre` VARCHAR(45) NOT NULL,
-  `description` VARCHAR(45) NOT NULL,
+  `titre` VARCHAR(150) NOT NULL,
+  `description` TEXT NOT NULL,
   `etat` VARCHAR(45) NOT NULL,
   `prix` DECIMAL(10,2) NOT NULL,
   `statut` VARCHAR(45) NOT NULL,
+	`image` VARCHAR(255) NULL,
   `Client_particulier_idClient` INT NOT NULL,
   `id_sous_categorie` INT NOT NULL,
   PRIMARY KEY (`idProduit`),
